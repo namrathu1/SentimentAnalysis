@@ -9,6 +9,8 @@ Created on Fri Nov 30 12:32:19 2018
 import tweepy
 from textblob import TextBlob
 
+import csv
+
 consumer_key = 'cjF7t46PqK9kIWZbe5Ph8Q'
 consumer_secret = 'vI0SDztM9Rw1jdIdod4Uj1f3m4wNAYqkGw2pqJuCp1g'
 
@@ -25,11 +27,21 @@ api = tweepy.API(auth)
 
 public_tweets = api.search('Trump')
 
+
+sentiments = []
 for tweet in public_tweets:
     print(tweet.text)
     analysis = TextBlob(tweet.text)
     print(analysis.sentiment)
-    
+    sentiments.append(str(tweet.text.encode("utf-8")))
+    sentiments.append(str(analysis.sentiment))
+    sentiments.append("\n\n")
+
+with open('sentimentAnalysis.csv','w') as csvfile:
+    fileWriter = csv.writer(csvfile,delimiter = ',', quotechar='|', quoting = csv.QUOTE_MINIMAL)
+    fileWriter.writerow(sentiments)
 
 # polarity - how positive or negative a comment is
 # subjectivity - how much of an opinion it is v/s factual
+    
+    
